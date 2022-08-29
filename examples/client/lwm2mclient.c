@@ -85,6 +85,10 @@
 #define DEFAULT_SERVER_IPV6 "[::1]"
 #define DEFAULT_SERVER_IPV4 "127.0.0.1"
 
+
+///////////////////..........//////////////////////
+
+
 int g_reboot = 0;
 static int g_quit = 0;
 
