@@ -68,8 +68,8 @@ lwm2m_context_t * lwm2m_init(void * userData)
     {
         memset(contextP, 0, sizeof(lwm2m_context_t));
         contextP->userData = userData;
-        srand((int)lwm2m_gettime());
-        contextP->nextMID = rand();
+        srand((int)lwm2m_gettime());  //srand(time(NULL)) 해당 함수를 사용해야 랜덤 난수 생성이 가능해진다.
+        contextP->nextMID = rand();   //즉 위 코드가 없으면 rand() 함수를 써도 계속 같은 수가 생성된다.
     }
 
     return contextP;
@@ -385,7 +385,7 @@ int lwm2m_step(lwm2m_context_t * contextP,
 #ifdef LWM2M_CLIENT_MODE
     LOG_ARG("State: %s", STR_STATE(contextP->state));
     // state can also be modified in bootstrap_handleCommand().
-
+    printf("111\n");
 next_step:
     switch (contextP->state)
     {
@@ -394,12 +394,15 @@ next_step:
         if (contextP->serverList != NULL)
         {
             contextP->state = STATE_REGISTER_REQUIRED;
+            printf("STATE_INITIAL 222-1\n");
         }
         else
         {
             // Bootstrapping
+        	printf("STATE_INITIAL 222-2\n");
             contextP->state = STATE_BOOTSTRAP_REQUIRED;
         }
+        printf("STATE_INITIAL 222\n");
         goto next_step;
 
     case STATE_BOOTSTRAP_REQUIRED:
@@ -409,12 +412,15 @@ next_step:
             bootstrap_start(contextP);
             contextP->state = STATE_BOOTSTRAPPING;
             bootstrap_step(contextP, tv_sec, timeoutP);
+            printf("STATE_BOOTSTRAP_REQUIRED 333-1\n");
         }
         else
 #endif
         {
+        	printf("STATE_BOOTSTRAP_REQUIRED 333-2\n");
             return COAP_503_SERVICE_UNAVAILABLE;
         }
+    	printf("STATE_BOOTSTRAP_REQUIRED 333\n");
         break;
 
 #ifdef LWM2M_BOOTSTRAP
@@ -423,16 +429,20 @@ next_step:
         {
         case STATE_BS_FINISHED:
             contextP->state = STATE_INITIAL;
+        	printf("STATE_BOOTSTRAPPING 444-1\n");
             goto next_step;
 
         case STATE_BS_FAILED:
+        	printf("STATE_BOOTSTRAPPING 444-2\n");
             return COAP_503_SERVICE_UNAVAILABLE;
 
         default:
             // keep on waiting
+        	printf("STATE_BOOTSTRAPPING 444-3\n");
             bootstrap_step(contextP, tv_sec, timeoutP);
             break;
         }
+    	printf("STATE_BOOTSTRAPPING 444\n");
         break;
 #endif
     case STATE_REGISTER_REQUIRED:
@@ -440,7 +450,9 @@ next_step:
         int result = registration_start(contextP, true);
         if (COAP_NO_ERROR != result) return result;
         contextP->state = STATE_REGISTERING;
+        printf("STATE_REGISTER_REQUIRED 555\n");
     }
+
     break;
 
     case STATE_REGISTERING:
@@ -448,20 +460,27 @@ next_step:
         switch (registration_getStatus(contextP))
         {
         case STATE_REGISTERED:
+        	printf(" STATE_REGISTERED 666-1\n");
             contextP->state = STATE_READY;
             break;
 
         case STATE_REG_FAILED:
+        	printf(" STATE_REG_FAILED 666-2\n");
             // TODO avoid infinite loop by checking the bootstrap info is different
             contextP->state = STATE_BOOTSTRAP_REQUIRED;
             goto next_step;
 
         case STATE_REG_PENDING:
+        	printf("STATE_REG_PENDING 666-3\n");
+        	break;
         default:
+        	printf(" STATE_REG_PENDING 666-4\n");
             // keep on waiting
             break;
         }
+        printf(" STATE_REGISTERING 666\n");
     }
+
     break;
 
     case STATE_READY:
@@ -469,23 +488,34 @@ next_step:
         {
             // TODO avoid infinite loop by checking the bootstrap info is different
             contextP->state = STATE_BOOTSTRAP_REQUIRED;
+        	printf("STATE_READY 777-1\n");
             goto next_step;
             break;
         }
+    	printf("STATE_READY 777-2\n");
         break;
 
     default:
+    	printf("STATE_READY 777\n");
         // do nothing
         break;
     }
-
+	printf("aaa\n");
     observe_step(contextP, tv_sec, timeoutP);
 #endif
 
+	printf("bbb\n");
+
     registration_step(contextP, tv_sec, timeoutP);
+
+	printf("ccc\n");
+
     transaction_step(contextP, tv_sec, timeoutP);
 
+	printf("ddd\n");
+
     LOG_ARG("Final timeoutP: %d", (int) *timeoutP);
+
 #ifdef LWM2M_CLIENT_MODE
     LOG_ARG("Final state: %s", STR_STATE(contextP->state));
 #endif

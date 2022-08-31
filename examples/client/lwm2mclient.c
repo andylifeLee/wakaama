@@ -871,13 +871,13 @@ int main(int argc, char *argv[])
     const char * localPort = "56830";
     const char * server = NULL;
     const char * serverPort = LWM2M_STANDARD_PORT_STR;
-    char * name = "testlwm2mclient";
-    int lifetime = 300;
-    int batterylevelchanging = 0;
-    time_t reboot_time = 0;
-    int opt;
-    bool bootstrapRequested = false;
-    bool serverPortChanged = false;
+    char       * name = "testlwm2mclient";
+    int          lifetime = 300;
+    int          batterylevelchanging = 0;
+    time_t       reboot_time = 0;
+    int          opt;
+    bool         bootstrapRequested = false;
+    bool         serverPortChanged  = false;
 
 #ifdef LWM2M_BOOTSTRAP
     lwm2m_client_state_t previousState = STATE_INITIAL;
@@ -1024,8 +1024,7 @@ int main(int argc, char *argv[])
                 return 0;
             }
             uint16_t coap_block_size_arg;
-            if (1 == sscanf(argv[opt], "%" SCNu16, &coap_block_size_arg) &&
-                lwm2m_set_coap_block_size(coap_block_size_arg)) {
+            if (1 == sscanf(argv[opt], "%" SCNu16, &coap_block_size_arg) && lwm2m_set_coap_block_size(coap_block_size_arg)) {
                 break;
             } else {
                 print_usage();
@@ -1205,7 +1204,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    signal(SIGINT, handle_sigint);
+    signal(SIGINT, handle_sigint); //SIGINT("program interrupt") 시그널은 사용자가 INTR 문자를 (보통 C-c)을 입력했을 때 보내어진다.
 
     /**
      * Initialize value changed callback.

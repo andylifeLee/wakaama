@@ -64,7 +64,8 @@
 
 #include "er-coap-13/er-coap-13.h"
 
-#ifdef LWM2M_WITH_LOGS
+//#ifdef LWM2M_WITH_LOGS
+
 #include <inttypes.h>
 #define LOG(STR) lwm2m_printf("[%s:%d] " STR "\r\n", __func__ , __LINE__)
 #define LOG_ARG(FMT, ...) lwm2m_printf("[%s:%d] " FMT "\r\n", __func__ , __LINE__ , __VA_ARGS__)
@@ -82,13 +83,13 @@
 }
 #else
 #define LOG_URI(URI)                                                                \
-    if ((URI) == NULL) lwm2m_printf("[%s:%d] NULL\r\n", __func__ , __LINE__);       \
-    else if (!LWM2M_URI_IS_SET_OBJECT(URI)) lwm2m_printf("[%s:%d] /\r\n", __func__ , __LINE__); \
+    if ((URI) == NULL)                        lwm2m_printf("[%s:%d] NULL\r\n", __func__ , __LINE__);       \
+    else if (!LWM2M_URI_IS_SET_OBJECT(URI))   lwm2m_printf("[%s:%d] /\r\n", __func__ , __LINE__); \
     else if (!LWM2M_URI_IS_SET_INSTANCE(URI)) lwm2m_printf("[%s:%d] /%d\r\n", __func__ , __LINE__, (URI)->objectId); \
     else if (!LWM2M_URI_IS_SET_RESOURCE(URI)) lwm2m_printf("[%s:%d] /%d/%d\r\n", __func__ , __LINE__, (URI)->objectId, (URI)->instanceId); \
     else if (!LWM2M_URI_IS_SET_RESOURCE_INSTANCE(URI)) lwm2m_printf("[%s:%d] /%d/%d/%d\r\n", __func__ , __LINE__, (URI)->objectId, (URI)->instanceId, (URI)->resourceId); \
-    else lwm2m_printf("[%s:%d] /%d/%d/%d/%d\r\n", __func__ , __LINE__, (URI)->objectId, (URI)->instanceId, (URI)->resourceId, (URI)->resourceInstanceId)
-#endif
+    else                                      lwm2m_printf("[%s:%d] /%d/%d/%d/%d\r\n", __func__ , __LINE__, (URI)->objectId, (URI)->instanceId, (URI)->resourceId, (URI)->resourceInstanceId)
+//#endif
 #define STR_STATUS(S)                                           \
 ((S) == STATE_DEREGISTERED ? "STATE_DEREGISTERED" :             \
 ((S) == STATE_REG_HOLD_OFF ? "STATE_REG_HOLD_OFF" :             \
@@ -124,11 +125,11 @@
 ((S) == STATE_READY ? "STATE_READY" :      \
 "Unknown"))))))
 #define STR_NULL2EMPTY(S) ((const char *)(S) ? (const char *)(S) : "")
-#else
-#define LOG_ARG(FMT, ...)
-#define LOG(STR)
-#define LOG_URI(URI)
-#endif
+//#else
+//#define LOG_ARG(FMT, ...)
+//#define LOG(STR)
+//#define LOG_URI(URI)
+//#endif
 
 #define LWM2M_DEFAULT_LIFETIME  86400
 

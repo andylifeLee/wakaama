@@ -168,7 +168,7 @@ int connection_send(connection_t *connP,
     int nbSent;
     size_t offset;
 
-#ifdef LWM2M_WITH_LOGS
+//#ifdef LWM2M_WITH_LOGS
     char s[INET6_ADDRSTRLEN];
     in_port_t port;
 
@@ -192,7 +192,7 @@ int connection_send(connection_t *connP,
     fprintf(stderr, "Sending %lu bytes to [%s]:%hu\r\n", length, s, ntohs(port));
 
     output_buffer(stderr, buffer, length, 0);
-#endif
+//#endif
 
     offset = 0;
     while (offset != length)
